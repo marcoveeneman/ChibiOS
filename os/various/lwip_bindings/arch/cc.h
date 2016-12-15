@@ -51,24 +51,41 @@
 #ifndef __CC_H__
 #define __CC_H__
 
-#include <hal.h>
+#include "hal.h"
 
-typedef uint8_t         u8_t;
-typedef int8_t          s8_t;
-typedef uint16_t        u16_t;
-typedef int16_t         s16_t;
-typedef uint32_t        u32_t;
-typedef int32_t         s32_t;
-typedef uint32_t        mem_ptr_t;
+#if defined(LWIP_DEBUG)
+#include "chprintf.h"
+#endif
+
+/* Platform endianess.*/
+#if !defined(BYTE_ORDER)
+#define BYTE_ORDER LITTLE_ENDIAN
+#endif
+
+#define LWIP_PROVIDE_ERRNO
+
+/* ch(sn)printf doesn't support all type formatters. Define them here if the
+ * default is not working.*/
+#define X8_F  "02x"
+#define U16_F PRIu32
+#define S16_F PRId32
+#define X16_F PRIx32
 
 #define PACK_STRUCT_STRUCT __attribute__((packed))
 
+#if defined(LWIP_DEBUG)
+#define STRIP(...) __VA_ARGS__
+#define LWIP_PLATFORM_DIAG(x) do {                                          \
+  chprintf((BaseSequentialStream *)&SD1, STRIP x);                          \
+} while(0)
+#else
 #define LWIP_PLATFORM_DIAG(x)
-#define LWIP_PLATFORM_ASSERT(x) {                                       \
-  osalSysHalt(x);                                                          \
+#endif
+
+#define LWIP_PLATFORM_ASSERT(x) {                                           \
+  osalSysHalt(x);                                                           \
 }
 
-#define BYTE_ORDER LITTLE_ENDIAN
-#define LWIP_PROVIDE_ERRNO
+
 
 #endif /* __CC_H__ */
