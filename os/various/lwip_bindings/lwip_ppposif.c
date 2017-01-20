@@ -133,16 +133,6 @@ void lwipPPPoSIFObjectInit(LwIPPPPoSIFDriver *dp)
   dp->restart = false;
 #if defined(_CHIBIOS_RT_)
   dp->tr = NULL;
-  /* Filling the thread working area here because the function
-     @p chThdCreateI() does not do it.*/
-#if CH_DBG_FILL_THREADS
-  {
-    void *wsp = dp->wa_pppos;
-    _thread_memfill((uint8_t *)wsp,
-                    (uint8_t *)wsp + sizeof (dp->wa_pppos),
-                    CH_DBG_STACK_FILL_VALUE);
-  }
-#endif
 #endif
 }
 
