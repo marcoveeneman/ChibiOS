@@ -52,6 +52,8 @@
  * Initialization.
  */
 static void low_level_init(struct netif *netif) {
+  LwIPEthernetIFDriver *dp = netif->state;
+
   /* set MAC hardware address length */
   netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
@@ -60,7 +62,7 @@ static void low_level_init(struct netif *netif) {
 
   /* device capabilities */
   /* don't set NETIF_FLAG_ETHARP if this device is not an Ethernet one */
-  netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+  netif->flags = dp->netif_flags;
 
   /* Do whatever else is needed to initialize interface. */
 }
@@ -273,6 +275,7 @@ void lwipEthernetIFObjectInit(LwIPEthernetIFDriver *dp)
 {
   dp->state = LWIP_ETH_STOP;
   dp->config = NULL;
+  dp->netif_flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 #if defined(_CHIBIOS_RT_)
   dp->tr = NULL;
 #endif

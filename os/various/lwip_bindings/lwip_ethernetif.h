@@ -119,6 +119,8 @@ struct LwIPEthernetIFDriver
 #endif
   // lwip netif
   struct netif netif;
+
+  u8_t netif_flags;
 };
 
 #ifdef __cplusplus
